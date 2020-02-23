@@ -81,9 +81,36 @@ resource "aws_iam_policy" "go-eat-lambda_logging" {
 EOF
 }
 
+resource "aws_iam_policy" "go-eat-dynamo" {
+  name = "go-eat-dynamo"
+  path = "/"
+  description = "IAM policy for DynamoDB access from a lambda"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt1582485790003",
+      "Action": [
+        "dynamodb:PutItem"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:dynamodb:*:*:*"
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_iam_role_policy_attachment" "go-eat-lambda_logs" {
   role = aws_iam_role.go-eat-role.name
   policy_arn = aws_iam_policy.go-eat-lambda_logging.arn
+}
+
+resource "aws_iam_role_policy_attachment" "go-eat-dynamo" {
+  role = aws_iam_role.go-eat-role.name
+  policy_arn = aws_iam_policy.go-eat-dynamo.arn
 }
 
 # we want to run this on weekdays between 7am and 4pm, every full hour

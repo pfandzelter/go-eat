@@ -89,7 +89,7 @@ resource "aws_iam_role_policy_attachment" "go-eat-lambda_logs" {
 # we want to run this on weekdays between 7am and 4pm, every full hour
 resource "aws_cloudwatch_event_rule" "go-eat-cron" {
   name                = "go-eat-cron"
-  schedule_expression = "cron(0 7 ? * 1-5 *)"
+  schedule_expression = "cron(0 7 ? * 2-6 *)"
 }
 
 resource "aws_cloudwatch_event_target" "go-eat-lambda" {

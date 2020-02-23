@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -73,7 +72,6 @@ func (m *mensa) GetFood(t time.Time) ([]food.Food, error) {
 	doc.Find(".splGroupWrapper").Each(func(i int, t *goquery.Selection) {
 		if t.Find("div > .splGroup").Text() == "Aktionen" || t.Find("div > .splGroup").Text() == "Essen" {
 			t.Find(".splMeal").Each(func(i int, s *goquery.Selection) {
-				log.Printf("%#v", s.Text())
 				name := s.Find("div > .bold").Text()
 
 				if checkBlacklist(name) {
@@ -90,8 +88,6 @@ func (m *mensa) GetFood(t time.Time) ([]food.Food, error) {
 				prices := strings.Split(price, "/")
 
 				studPrice, err := strconv.Atoi(prices[0])
-
-				log.Printf("%#v", s.Find(".col-xs-6.col-md-3.text-right").Text())
 
 				if err != nil {
 					return

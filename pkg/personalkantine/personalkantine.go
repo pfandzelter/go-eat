@@ -3,7 +3,6 @@ package personalkantine
 import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/pfandzelter/go-eat/pkg/food"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -54,7 +53,6 @@ func (m *kantine) GetFood(t time.Time) ([]food.Food, error) {
 	}
 
 	doc.Find("#speisekarte > div > div > .Menu__accordion > li").Each(func(i int, t *goquery.Selection) {
-		log.Printf("%#v", t.Text())
 		if strings.Contains(t.Find("h2").Text(), date) {
 
 			t.Find("ul > li").Each(func(i int, s *goquery.Selection) {

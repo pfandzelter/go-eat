@@ -16,7 +16,6 @@ type mensa interface {
 	GetFood(date time.Time) ([]food.Food, error)
 }
 
-
 // HandleRequest handles one request to the lambda function.
 func HandleRequest() {
 	tablename := os.Getenv("DYNAMODB_TABLE")
@@ -28,7 +27,7 @@ func HandleRequest() {
 		log.Fatal(err)
 	}
 
-	canteens := make(map [string]mensa)
+	canteens := make(map[string]mensa)
 
 	canteens["Hauptmensa"] = stw.New(321)
 	canteens["Veggie 2.0"] = stw.New(321)
@@ -37,7 +36,7 @@ func HandleRequest() {
 
 	t := time.Now()
 
-	foodlists := make(map [string][]food.Food)
+	foodlists := make(map[string][]food.Food)
 
 	for c, m := range canteens {
 		fl, err := m.GetFood(t)
@@ -49,7 +48,7 @@ func HandleRequest() {
 	}
 
 	for c, f := range foodlists {
-		err := db.PutFood(c, f)
+		err := db.PutFood(c, f, t)
 		if err != nil {
 			log.Print(err)
 		}

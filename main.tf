@@ -3,12 +3,18 @@ data "aws_region" "current" {}
 resource "aws_dynamodb_table" "go-eat-table" {
   name           = "go-eat"
   hash_key       = "name"
+  range_key = "date"
   billing_mode = "PROVISIONED"
   write_capacity = 1
   read_capacity = 1
 
   attribute {
     name = "name"
+    type = "S"
+  }
+
+  attribute {
+    name = "date"
     type = "S"
   }
 }
@@ -83,7 +89,7 @@ resource "aws_iam_role_policy_attachment" "go-eat-lambda_logs" {
 # we want to run this on weekdays between 7am and 4pm, every full hour
 resource "aws_cloudwatch_event_rule" "go-eat-cron" {
   name                = "go-eat-cron"
-  schedule_expression = "cron(0 7-15 ? * 1-5 *)"
+  schedule_expression = "cron(0 8 ? * 1-5 *)"
 }
 
 resource "aws_cloudwatch_event_target" "go-eat-lambda" {

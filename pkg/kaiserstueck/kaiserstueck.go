@@ -37,18 +37,20 @@ func (m *kaiserstk) GetFood(t time.Time) ([]food.Food, error) {
 	}
 
 	doc.Find(".entry-content").Each(func(i int, s *goquery.Selection) {
-		name := s.Find("p").Text()
-		name = strings.Replace(name, "\n", " ", -1)
+		s.Find("p").Each(func(i int, t *goquery.Selection) {
+			name := t.Text()
+			name = strings.Replace(name, "\n", " ", -1)
 
-		veg := strings.Contains(name, "veg.")
+			veg := strings.Contains(name, "veg.")
 
-		foodstuff[name] = food.Food{
-			Name:       name,
-			StudPrice:  price,
-			ProfPrice:  price,
-			Vegan:      false,
-			Vegetarian: veg,
-		}
+			foodstuff[name] = food.Food{
+				Name:       name,
+				StudPrice:  price,
+				ProfPrice:  price,
+				Vegan:      false,
+				Vegetarian: veg,
+			}
+		})
 	})
 
 	// return stuff

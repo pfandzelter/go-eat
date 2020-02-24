@@ -1,7 +1,6 @@
 package dynamo
 
 import (
-	"encoding/json"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
@@ -34,7 +33,7 @@ func New(region string, table string) (*DB, error) {
 
 // PutFood puts one food item into the DynamoDB table.
 func (d *DB) PutFood(c string, f []food.Food, t time.Time) error {
-	item, err := json.Marshal(struct {
+	item := struct {
 		Canteen string      `json:"canteen"`
 		Date    string      `json:"date"`
 		Items   []food.Food `json:"items"`
@@ -42,10 +41,6 @@ func (d *DB) PutFood(c string, f []food.Food, t time.Time) error {
 		Canteen: c,
 		Date:    t.Format("2006-01-02"),
 		Items:   f,
-	})
-
-	if err != nil {
-		return err
 	}
 
 	av, err := dynamodbattribute.MarshalMap(item)

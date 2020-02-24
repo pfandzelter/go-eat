@@ -2,14 +2,14 @@ data "aws_region" "current" {}
 
 resource "aws_dynamodb_table" "go-eat-table" {
   name           = "go-eat"
-  hash_key       = "name"
+  hash_key       = "canteen"
   range_key = "date"
   billing_mode = "PROVISIONED"
   write_capacity = 1
   read_capacity = 1
 
   attribute {
-    name = "name"
+    name = "canteen"
     type = "S"
   }
 

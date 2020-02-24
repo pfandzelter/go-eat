@@ -3,11 +3,12 @@
 deploy: go-eat.zip main.tf init.done
 	terraform apply
 	touch $@
+	rm -f plan go-eat.zip go-eat
 
 plan: go-eat.zip main.tf init.done
 	terraform plan
 	touch $@
-
+	rm -f go-eat.zip go-eat
 
 init.done:
 	terraform init

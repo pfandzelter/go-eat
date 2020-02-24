@@ -27,16 +27,33 @@ func HandleRequest() {
 		log.Fatal(err)
 	}
 
-	canteens := make(map[string]mensa)
+	type Canteen struct {
+		Name     string
+		SpecDiet bool
+	}
 
-	canteens["Hauptmensa"] = stw.New(321)
-	canteens["Veggie 2.0"] = stw.New(631)
-	canteens["Kaiserstück"] = kaiserstueck.New()
-	canteens["Personalkantine"] = personalkantine.New()
+	canteens := make(map[Canteen]mensa)
+
+	canteens[Canteen{
+		Name:     "Hauptmensa",
+		SpecDiet: true,
+	}] = stw.New(321)
+	canteens[Canteen{
+		Name:     "Veggie 2.0",
+		SpecDiet: true,
+	}] = stw.New(631)
+	canteens[Canteen{
+		Name:     "Kaiserstück",
+		SpecDiet: false,
+	}] = kaiserstueck.New()
+	canteens[Canteen{
+		Name:     "Personalkantine",
+		SpecDiet: true,
+	}] = personalkantine.New()
 
 	t := time.Now()
 
-	foodlists := make(map[string][]food.Food)
+	foodlists := make(map[Canteen][]food.Food)
 
 	for c, m := range canteens {
 		fl, err := m.GetFood(t)
@@ -48,7 +65,7 @@ func HandleRequest() {
 	}
 
 	for c, f := range foodlists {
-		err := db.PutFood(c, f, t)
+		err := db.PutFood(c.Name, c.SpecDiet, f, t)
 		if err != nil {
 			log.Print(err)
 		}

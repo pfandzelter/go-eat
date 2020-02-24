@@ -32,15 +32,17 @@ func New(region string, table string) (*DB, error) {
 }
 
 // PutFood puts one food item into the DynamoDB table.
-func (d *DB) PutFood(c string, f []food.Food, t time.Time) error {
+func (d *DB) PutFood(c string, specdiet bool, f []food.Food, t time.Time) error {
 	item := struct {
-		Canteen string      `json:"canteen"`
-		Date    string      `json:"date"`
-		Items   []food.Food `json:"items"`
+		Canteen  string      `json:"canteen"`
+		SpecDiet bool        `json:"spec_diet"`
+		Date     string      `json:"date"`
+		Items    []food.Food `json:"items"`
 	}{
-		Canteen: c,
-		Date:    t.Format("2006-01-02"),
-		Items:   f,
+		Canteen:  c,
+		SpecDiet: specdiet,
+		Date:     t.Format("2006-01-02"),
+		Items:    f,
 	}
 
 	av, err := dynamodbattribute.MarshalMap(item)

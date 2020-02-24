@@ -21,8 +21,9 @@ type mensa struct {
 
 var blacklist = [...]string{
 	"kuchen",
-	"zimtcreme",
+	"creme",
 	"torte",
+	"Brownie",
 }
 
 // New creates a new service to pull the menu a STW Mensa based on an id.
@@ -34,7 +35,7 @@ func New(id int) *mensa {
 
 func checkBlacklist(name string) bool {
 	for _, item := range blacklist {
-		if strings.Contains(name, item) {
+		if strings.Contains(strings.ToUpper(name), strings.ToUpper(item)) {
 			return true
 		}
 	}

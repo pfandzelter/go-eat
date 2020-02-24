@@ -30,7 +30,7 @@ func HandleRequest() {
 	canteens := make(map[string]mensa)
 
 	canteens["Hauptmensa"] = stw.New(321)
-	canteens["Veggie 2.0"] = stw.New(321)
+	canteens["Veggie 2.0"] = stw.New(631)
 	canteens["Kaiserstück"] = kaiserstueck.New()
 	canteens["Personalkantine"] = personalkantine.New()
 

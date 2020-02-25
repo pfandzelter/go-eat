@@ -102,6 +102,8 @@ func (m *mensa) GetFood(t time.Time) ([]food.Food, error) {
 
 				vegetarian := false
 				vegan := false
+				fish := false
+
 				s.Find("div > .splIcon").Each(func(i int, x *goquery.Selection) {
 					src, ok := x.Attr("src")
 
@@ -118,6 +120,11 @@ func (m *mensa) GetFood(t time.Time) ([]food.Food, error) {
 						vegetarian = true
 						return
 					}
+
+					if src == "/vendor/infomax/mensen/icons/38.png" {
+						fish = true
+						return
+					}
 				})
 
 				foodstuff[name] = food.Food{
@@ -126,6 +133,7 @@ func (m *mensa) GetFood(t time.Time) ([]food.Food, error) {
 					ProfPrice:  profPrice,
 					Vegan:      vegan,
 					Vegetarian: vegetarian,
+					Fish:       fish,
 				}
 
 			})

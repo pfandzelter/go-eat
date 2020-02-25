@@ -76,14 +76,16 @@ func (m *kantine) GetFood(t time.Time) ([]food.Food, error) {
 					return
 				}
 
-				vegetarisch := strings.Contains(s.Text(), "(v)")
+				vegetarian := strings.Contains(s.Text(), "(v)")
+				fish := strings.Contains(s.Text(), "(F)")
 
 				foodstuff[name] = food.Food{
 					Name:       name,
 					StudPrice:  endprice,
 					ProfPrice:  endprice,
 					Vegan:      false,
-					Vegetarian: vegetarisch,
+					Vegetarian: vegetarian,
+					Fish:       fish,
 				}
 
 			})

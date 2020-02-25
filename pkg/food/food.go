@@ -7,4 +7,5 @@ type Food struct {
 	ProfPrice  int    `json:"profprice"`
 	Vegan      bool   `json:"vgn"`
 	Vegetarian bool   `json:"vgt"`
+	Fish       bool   `json:"fish"`
 }

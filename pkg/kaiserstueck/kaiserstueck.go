@@ -49,6 +49,7 @@ func (m *kaiserstk) GetFood(t time.Time) ([]food.Food, error) {
 				ProfPrice:  price,
 				Vegan:      false,
 				Vegetarian: veg,
+				Fish:       false,
 			}
 		})
 	})

@@ -6,6 +6,7 @@ import (
 	"github.com/pfandzelter/go-eat/pkg/food"
 	"github.com/pfandzelter/go-eat/pkg/kaiserstueck"
 	"github.com/pfandzelter/go-eat/pkg/personalkantine"
+	"github.com/pfandzelter/go-eat/pkg/singh"
 	"github.com/pfandzelter/go-eat/pkg/stw"
 	"log"
 	"os"
@@ -50,6 +51,10 @@ func HandleRequest() {
 		Name:     "Personalkantine",
 		SpecDiet: true,
 	}] = personalkantine.New()
+	canteens[Canteen{
+		Name:     "Mathe Café",
+		SpecDiet: true,
+	}] = singh.New()
 
 	t := time.Now()
 

@@ -55,7 +55,7 @@ func (m *singh) GetFood(t time.Time) ([]food.Food, error) {
 		if strings.Contains(t.Text(), date) {
 			t.Next().Next().Find(".menu-list__item").Each(func(i int, s *goquery.Selection) {
 
-				name := s.Find(".menu-list__item-title").Text()
+				name := s.Find(".menu-list__item-desc").Text()
 
 				price := s.Find(".menu-list__item-price").Text()
 				price = strings.Replace(price, "\n", "", -1)

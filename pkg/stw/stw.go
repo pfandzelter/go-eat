@@ -24,6 +24,7 @@ var blacklist = [...]string{
 	"creme",
 	"torte",
 	"Brownie",
+	"Apfeltasche",
 }
 
 // New creates a new service to pull the menu a STW Mensa based on an id.

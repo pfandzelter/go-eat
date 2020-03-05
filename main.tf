@@ -116,7 +116,7 @@ resource "aws_iam_role_policy_attachment" "go-eat-dynamo" {
 # we want to run this on weekdays between 7am and 4pm, every full hour
 resource "aws_cloudwatch_event_rule" "go-eat-cron" {
   name                = "go-eat-cron"
-  schedule_expression = "cron(0 7 ? * 2-6 *)"
+  schedule_expression = "cron(0 10 ? * 2-6 *)"
 }
 
 resource "aws_cloudwatch_event_target" "go-eat-lambda" {

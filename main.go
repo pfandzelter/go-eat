@@ -1,6 +1,10 @@
 package main
 
 import (
+	"log"
+	"os"
+	"time"
+
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/pfandzelter/go-eat/pkg/dynamo"
 	"github.com/pfandzelter/go-eat/pkg/food"
@@ -8,13 +12,15 @@ import (
 	"github.com/pfandzelter/go-eat/pkg/personalkantine"
 	"github.com/pfandzelter/go-eat/pkg/singh"
 	"github.com/pfandzelter/go-eat/pkg/stw"
-	"log"
-	"os"
-	"time"
 )
 
 type mensa interface {
 	GetFood(date time.Time) ([]food.Food, error)
+}
+
+type Canteen struct {
+	Name     string
+	SpecDiet bool
 }
 
 // HandleRequest handles one request to the lambda function.

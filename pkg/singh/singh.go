@@ -1,12 +1,14 @@
 package singh
 
 import (
-	"github.com/PuerkitoBio/goquery"
-	"github.com/pfandzelter/go-eat/pkg/food"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/PuerkitoBio/goquery"
+	"github.com/pfandzelter/go-eat/pkg/food"
 )
 
 type singh struct{}
@@ -22,19 +24,19 @@ func (m *singh) GetFood(t time.Time) ([]food.Food, error) {
 
 	switch date {
 	case "Monday":
-		date = "Montag"
+		date = "MONTAG"
 	case "Tuesday":
-		date = "Diensttag"
+		date = "DIENSTAG"
 	case "Wednesday":
-		date = "Mittwoch"
+		date = "MITTWOCH"
 	case "Thursday":
-		date = "Donnerstag"
+		date = "DONNERSTAG"
 	case "Friday":
-		date = "Freitag"
+		date = "FREITAG"
 	}
 
 	// download the correct website
-	resp, err := http.Get("http://singh-catering.de/cafe/")
+	resp, err := http.Get("http://mathe-cafe-tu.de/cafe/")
 
 	if err != nil {
 		return nil, err
@@ -51,40 +53,79 @@ func (m *singh) GetFood(t time.Time) ([]food.Food, error) {
 		return nil, err
 	}
 
-	doc.Find(".menu-list.menu-list__dotted > .menu-list__title").Each(func(i int, t *goquery.Selection) {
-		if strings.Contains(t.Text(), date) {
-			t.Next().Next().Find(".menu-list__item").Each(func(i int, s *goquery.Selection) {
+	doc.Find(".entry-content").Each(func(i int, s *goquery.Selection) {
+		s.Find(".wrap.mcb-wrap.one-second.valign-top.clearfix").Each(func(i int, m *goquery.Selection) {
 
-				name := s.Find(".menu-list__item-desc").Text()
+			// if the name of the day does not appear, we have the wrong menu
+			if !strings.Contains(m.Text(), date) {
+				// log.Printf("%s is not in %s", date, m.Text())
+				return
+			}
 
-				price := s.Find(".menu-list__item-price").Text()
-				price = strings.Replace(price, "\n", "", -1)
-				price = strings.Replace(price, " ", "", -1)
-				price = strings.Replace(price, "€", "", -1)
-				price = strings.Replace(price, "&euro;", "", -1)
-				price = strings.Replace(price, ",", "", -1)
-				price = strings.Replace(price, ".", "", -1)
+			var nextVeg bool
+			var nextVgn bool
+			for curr := m.Find(".column.mcb-column.one.column_column.column-margin-").First(); len(curr.Nodes) != 0; curr = curr.Next(){
+				name := curr.Text()
+				name = strings.Replace(name, "\n", " ", -1)
+				log.Printf("%s", name)
 
-				endprice, err := strconv.Atoi(price)
-
-				if err != nil {
-					return
+				if strings.Contains(name, date) {
+					continue
 				}
 
-				vegetarian := strings.Contains(s.Find(".menu-list__item-highlight-wrapper > .menu-list__item-highlight-title").Text(), "VEGETARISCH")
-				vegan := strings.Contains(s.Find(".menu-list__item-highlight-wrapper > .menu-list__item-highlight-title").Text(), "VEGAN")
+				if strings.Contains(name, "VEGETARISCH") {
+					nextVeg = true
+					continue
+				}
+
+				if strings.Contains(name, "VEGAN") {
+					nextVgn = true
+					continue
+				}
+
+				// find the description
+				desc := curr.Find("p").Text() + " (" + curr.Find("th").First().Text() + ")"
+				log.Printf("%s", desc)
+
+				// find the price
+				endprice := 999
+				for p := curr.Find("th").First(); len(p.Nodes) != 0 ; p = p.Next(){
+					log.Printf("p is %+v", p)
+					price := p.Text()
+					log.Printf("%s", price)
+
+					if !strings.Contains(price, "€") {
+						continue
+					}
+
+					price = strings.Replace(price, "\n", "", -1)
+					price = strings.Replace(price, " ", "", -1)
+					price = strings.Replace(price, "€", "", -1)
+					price = strings.Replace(price, "&euro;", "", -1)
+					price = strings.Replace(price, ",", "", -1)
+					price = strings.Replace(price, ".", "", -1)
+
+					endprice, err = strconv.Atoi(price)
+
+					if err != nil {
+						return
+					}
+
+					break
+				}
 
 				foodstuff[name] = food.Food{
-					Name:       name,
+					Name:       desc,
 					StudPrice:  endprice,
 					ProfPrice:  endprice,
-					Vegan:      vegan,
-					Vegetarian: vegetarian,
+					Vegan:      nextVgn,
+					Vegetarian: nextVeg,
 					Fish:       false,
 				}
-
-			})
-		}
+				nextVgn = false
+				nextVeg = false
+			}
+		})
 	})
 
 	// return stuff

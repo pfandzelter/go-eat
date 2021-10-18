@@ -1,11 +1,12 @@
 package kaiserstueck
 
 import (
-	"github.com/PuerkitoBio/goquery"
-	"github.com/pfandzelter/go-eat/pkg/food"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/PuerkitoBio/goquery"
+	"github.com/pfandzelter/go-eat/pkg/food"
 )
 
 const price = 580
@@ -40,6 +41,10 @@ func (m *kaiserstk) GetFood(t time.Time) ([]food.Food, error) {
 		s.Find("p").Each(func(i int, t *goquery.Selection) {
 			name := t.Text()
 			name = strings.Replace(name, "\n", " ", -1)
+
+			if strings.Contains(name, "Corona") {
+				return
+			}
 
 			veg := strings.Contains(name, "veg.")
 

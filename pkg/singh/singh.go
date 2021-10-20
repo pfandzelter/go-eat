@@ -67,7 +67,6 @@ func (m *singh) GetFood(t time.Time) ([]food.Food, error) {
 			for curr := m.Find(".column.mcb-column.one.column_column.column-margin-").First(); len(curr.Nodes) != 0; curr = curr.Next(){
 				name := curr.Text()
 				name = strings.Replace(name, "\n", " ", -1)
-				log.Printf("%s", name)
 
 				if strings.Contains(name, date) {
 					continue
@@ -90,9 +89,7 @@ func (m *singh) GetFood(t time.Time) ([]food.Food, error) {
 				// find the price
 				endprice := 999
 				for p := curr.Find("th").First(); len(p.Nodes) != 0 ; p = p.Next(){
-					log.Printf("p is %+v", p)
 					price := p.Text()
-					log.Printf("%s", price)
 
 					if !strings.Contains(price, "€") {
 						continue

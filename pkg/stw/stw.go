@@ -3,11 +3,12 @@ package stw
 import (
 	"bytes"
 	"fmt"
-	"github.com/PuerkitoBio/goquery"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/PuerkitoBio/goquery"
 
 	"github.com/pfandzelter/go-eat/pkg/food"
 )
@@ -27,7 +28,7 @@ var blacklist = [...]string{
 	"Apfeltasche",
 }
 
-// New creates a new service to pull the menu a STW Mensa based on an id.
+// New creates a new service to pull the menu for an STW Mensa based on an id.
 func New(id int) *mensa {
 	return &mensa{
 		id: id,
@@ -127,6 +128,14 @@ func (m *mensa) GetFood(t time.Time) ([]food.Food, error) {
 						return
 					}
 				})
+
+				// we only check for the fishing symbol, for unfair fishing that doesn't appear
+				// we can alternatively check for the "24" allergen, meaning fish or "22" meaning sea food
+
+				if !fish {
+					allergens := s.Find("div > .kennz").Text()
+					fish = strings.Contains(allergens, "24") || strings.Contains(allergens, "22")
+				}
 
 				foodstuff[name] = food.Food{
 					Name:       name,

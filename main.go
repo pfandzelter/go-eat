@@ -3,8 +3,10 @@ package main
 import (
 	"log"
 	"os"
+	"strings"
 	"time"
 
+	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/pfandzelter/go-eat/pkg/dynamo"
 	"github.com/pfandzelter/go-eat/pkg/food"
@@ -24,7 +26,21 @@ type Canteen struct {
 }
 
 // HandleRequest handles one request to the lambda function.
-func HandleRequest() {
+func HandleRequest(event events.CloudWatchEvent) {
+
+	timezone := os.Getenv("MENSA_TIMEZONE")
+
+	tz, err := time.LoadLocation(timezone)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// see if this event was triggered by the DST eventbridge rule
+	if strings.Contains(event.Resources[0], "dst") != time.Now().In(tz).IsDST() {
+		return
+	}
+
 	tablename := os.Getenv("DYNAMODB_TABLE")
 	region := os.Getenv("DYNAMODB_REGION")
 

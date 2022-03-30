@@ -1,12 +1,15 @@
-data "aws_region" "current" {}
+provider "aws" {
+  profile = var.aws_cli_profile
+  region  = var.aws_region
+}
 
 resource "aws_dynamodb_table" "go-eat-table" {
   name           = "go-eat"
   hash_key       = "canteen"
-  range_key = "date"
-  billing_mode = "PROVISIONED"
+  range_key      = "date"
+  billing_mode   = "PROVISIONED"
   write_capacity = 1
-  read_capacity = 1
+  read_capacity  = 1
 
   attribute {
     name = "canteen"
@@ -31,8 +34,9 @@ resource "aws_lambda_function" "go-eat" {
 
   environment {
     variables = {
-      DYNAMODB_TABLE = aws_dynamodb_table.go-eat-table.name,
-      DYNAMODB_REGION = data.aws_region.current.name
+      DYNAMODB_TABLE  = aws_dynamodb_table.go-eat-table.name,
+      DYNAMODB_REGION = var.aws_region
+      MENSA_TIMEZONE  = var.mensa_timezone
     }
   }
 }
@@ -59,8 +63,8 @@ resource "aws_iam_role_policy_attachment" "go-eat-basic-exec-role" {
 }
 
 resource "aws_iam_policy" "go-eat-lambda_logging" {
-  name = "go-eat-lambda_logging"
-  path = "/"
+  name        = "go-eat-lambda_logging"
+  path        = "/"
   description = "IAM policy for logging from a lambda"
 
   policy = <<EOF
@@ -82,8 +86,8 @@ EOF
 }
 
 resource "aws_iam_policy" "go-eat-dynamo" {
-  name = "go-eat-dynamo"
-  path = "/"
+  name        = "go-eat-dynamo"
+  path        = "/"
   description = "IAM policy for DynamoDB access from a lambda"
 
   policy = <<EOF
@@ -104,12 +108,12 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "go-eat-lambda_logs" {
-  role = aws_iam_role.go-eat-role.name
+  role       = aws_iam_role.go-eat-role.name
   policy_arn = aws_iam_policy.go-eat-lambda_logging.arn
 }
 
 resource "aws_iam_role_policy_attachment" "go-eat-dynamo" {
-  role = aws_iam_role.go-eat-role.name
+  role       = aws_iam_role.go-eat-role.name
   policy_arn = aws_iam_policy.go-eat-dynamo.arn
 }
 
@@ -117,6 +121,12 @@ resource "aws_iam_role_policy_attachment" "go-eat-dynamo" {
 resource "aws_cloudwatch_event_rule" "go-eat-cron" {
   name                = "go-eat-cron"
   schedule_expression = "cron(30 9 ? * 2-6 *)"
+}
+
+# we want to run this on weekdays between 7am and 4pm, every full hour (but also on DST)
+resource "aws_cloudwatch_event_rule" "go-eat-cron-dst" {
+  name                = "go-eat-cron-dst"
+  schedule_expression = "cron(30 8 ? * 2-6 *)"
 }
 
 resource "aws_cloudwatch_event_target" "go-eat-lambda" {

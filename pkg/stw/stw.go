@@ -15,7 +15,7 @@ import (
 
 // Mensen:
 // 321 - TU Hardenbergstr
-// 631 - TU Veggie 2.0
+// 631 - TU Pasteria Veggie 2.0
 type mensa struct {
 	id int
 }

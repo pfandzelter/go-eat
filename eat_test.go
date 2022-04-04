@@ -28,7 +28,7 @@ func TestHauptmensa(_ *testing.T) {
 }
 
 func TestVeggie(_ *testing.T) {
-	testCanteen("Veggie 2.0", true, stw.New(631))
+	testCanteen("Pasteria Veggie 2.0", true, stw.New(631))
 }
 
 func TestKaiserstueck(_ *testing.T) {

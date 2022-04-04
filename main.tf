@@ -135,10 +135,24 @@ resource "aws_cloudwatch_event_target" "go-eat-lambda" {
   arn       = aws_lambda_function.go-eat.arn
 }
 
+resource "aws_cloudwatch_event_target" "go-eat-lambda-dst" {
+  target_id = "runLambda"
+  rule      = aws_cloudwatch_event_rule.go-eat-cron-dst.name
+  arn       = aws_lambda_function.go-eat.arn
+}
+
 resource "aws_lambda_permission" "go-eat-cloudwatch" {
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.go-eat.arn
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.go-eat-cron.arn
+}
+
+resource "aws_lambda_permission" "go-eat-cloudwatch-dst" {
+  statement_id  = "AllowExecutionFromCloudWatchDST"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.go-eat.arn
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.go-eat-cron-dst.arn
 }

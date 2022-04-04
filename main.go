@@ -62,7 +62,7 @@ func HandleRequest(event events.CloudWatchEvent) {
 		SpecDiet: true,
 	}] = stw.New(321)
 	canteens[Canteen{
-		Name:     "Veggie 2.0",
+		Name:     "Pasteria Veggie 2.0",
 		SpecDiet: true,
 	}] = stw.New(631)
 	canteens[Canteen{

@@ -1,12 +1,13 @@
 package personalkantine
 
 import (
-	"github.com/PuerkitoBio/goquery"
-	"github.com/pfandzelter/go-eat/pkg/food"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/PuerkitoBio/goquery"
+	"github.com/pfandzelter/go-eat/pkg/food"
 )
 
 var blacklist = [...]string{
@@ -35,7 +36,7 @@ func (m *kantine) GetFood(t time.Time) ([]food.Food, error) {
 	date := t.Format("02.01.2006")
 
 	// download the correct website
-	resp, err := http.Get("http://personalkantine.personalabteilung.tu-berlin.de/")
+	resp, err := http.Get("https://personalkantine.personalabteilung.tu-berlin.de/")
 
 	if err != nil {
 		return nil, err
@@ -52,7 +53,7 @@ func (m *kantine) GetFood(t time.Time) ([]food.Food, error) {
 		return nil, err
 	}
 
-	doc.Find("#speisekarte > div > div > .Menu__accordion > li").Each(func(i int, t *goquery.Selection) {
+	doc.Find("main > #wochenkarte > div > div > .Menu__accordion > li").Each(func(i int, t *goquery.Selection) {
 		if strings.Contains(t.Find("h2").Text(), date) {
 
 			t.Find("ul > li").Each(func(i int, s *goquery.Selection) {

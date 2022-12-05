@@ -9,7 +9,7 @@ import (
 	"github.com/pfandzelter/go-eat/pkg/food"
 )
 
-const price = 580
+const price = 670
 
 type kaiserstk struct{}
 

@@ -15,17 +15,20 @@ import (
 
 // Mensen:
 // 321 - TU Hardenbergstr
-// 631 - TU Pasteria Veggie 2.0
+// 631 - TU Pastaria Veggie 2.0
+// 538 - TU Marchstr
+// 540 - TU Pastaria Architektur
 type mensa struct {
 	id int
 }
 
-var blacklist = [...]string{
+var blocklist = [...]string{
 	"kuchen",
 	"creme",
 	"torte",
 	"Brownie",
 	"Apfeltasche",
+	"Gouda",
 }
 
 // New creates a new service to pull the menu for an STW Mensa based on an id.
@@ -35,8 +38,8 @@ func New(id int) *mensa {
 	}
 }
 
-func checkBlacklist(name string) bool {
-	for _, item := range blacklist {
+func checkblocklist(name string) bool {
+	for _, item := range blocklist {
 		if strings.Contains(strings.ToUpper(name), strings.ToUpper(item)) {
 			return true
 		}
@@ -77,7 +80,7 @@ func (m *mensa) GetFood(t time.Time) ([]food.Food, error) {
 			t.Find(".splMeal").Each(func(i int, s *goquery.Selection) {
 				name := s.Find("div > .bold").Text()
 
-				if checkBlacklist(name) {
+				if checkblocklist(name) {
 					return
 				}
 

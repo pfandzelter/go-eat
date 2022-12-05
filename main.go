@@ -66,6 +66,14 @@ func HandleRequest(event events.CloudWatchEvent) {
 		SpecDiet: true,
 	}] = stw.New(631)
 	canteens[Canteen{
+		Name:     "Marchstr",
+		SpecDiet: true,
+	}] = stw.New(538)
+	canteens[Canteen{
+		Name:     "Pastaria Architektur",
+		SpecDiet: true,
+	}] = stw.New(540)
+	canteens[Canteen{
 		Name:     "Kaiserstück",
 		SpecDiet: false,
 	}] = kaiserstueck.New()

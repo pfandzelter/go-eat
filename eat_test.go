@@ -46,6 +46,22 @@ func TestVeggie(t *testing.T) {
 	}
 }
 
+func TestArchitektur(t *testing.T) {
+	err := testCanteen("Pastaria Architektur", true, stw.New(540))
+
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestMarchstr(t *testing.T) {
+	err := testCanteen("Marchstr", true, stw.New(538))
+
+	if err != nil {
+		t.Error(err)
+	}
+}
+
 func TestKaiserstueck(t *testing.T) {
 	err := testCanteen("Kaiserstück", false, kaiserstueck.New())
 

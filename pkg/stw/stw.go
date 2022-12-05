@@ -73,7 +73,7 @@ func (m *mensa) GetFood(t time.Time) ([]food.Food, error) {
 	}
 
 	doc.Find(".splGroupWrapper").Each(func(i int, t *goquery.Selection) {
-		if t.Find("div > .splGroup").Text() == "Aktionen" || t.Find("div > .splGroup").Text() == "Essen" {
+		if t.Find(".row > .splGroup").Text() == "Aktionen" || t.Find(".row > .splGroup").Text() == "Essen" {
 			t.Find(".splMeal").Each(func(i int, s *goquery.Selection) {
 				name := s.Find("div > .bold").Text()
 
@@ -81,7 +81,7 @@ func (m *mensa) GetFood(t time.Time) ([]food.Food, error) {
 					return
 				}
 
-				price := s.Find(".col-xs-6.col-md-3.text-right").Text()
+				price := s.Find(".col-xs-12.col-md-3.text-right").Text()
 				price = strings.Replace(price, "\n", "", -1)
 				price = strings.Replace(price, " ", "", -1)
 				price = strings.Replace(price, "€", "", -1)
@@ -105,6 +105,7 @@ func (m *mensa) GetFood(t time.Time) ([]food.Food, error) {
 				vegetarian := false
 				vegan := false
 				fish := false
+				climate := false
 
 				s.Find("div > .splIcon").Each(func(i int, x *goquery.Selection) {
 					src, ok := x.Attr("src")
@@ -127,6 +128,11 @@ func (m *mensa) GetFood(t time.Time) ([]food.Food, error) {
 						fish = true
 						return
 					}
+
+					if src == "/vendor/infomax/mensen/icons/43.png" {
+						climate = true
+						return
+					}
 				})
 
 				// we only check for the fishing symbol, for unfair fishing that doesn't appear
@@ -144,8 +150,8 @@ func (m *mensa) GetFood(t time.Time) ([]food.Food, error) {
 					Vegan:      vegan,
 					Vegetarian: vegetarian,
 					Fish:       fish,
+					Climate:    climate,
 				}
-
 			})
 		}
 	})

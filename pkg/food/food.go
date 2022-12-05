@@ -8,4 +8,5 @@ type Food struct {
 	Vegan      bool   `json:"vgn"`
 	Vegetarian bool   `json:"vgt"`
 	Fish       bool   `json:"fish"`
+	Climate    bool   `json:"climate"`
 }

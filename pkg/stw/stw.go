@@ -29,6 +29,7 @@ var blocklist = [...]string{
 	"Brownie",
 	"Apfeltasche",
 	"Gouda",
+	"Veganer Schmelz gerieben",
 }
 
 // New creates a new service to pull the menu for an STW Mensa based on an id.

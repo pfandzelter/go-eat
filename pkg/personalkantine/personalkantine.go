@@ -1,7 +1,9 @@
 package personalkantine
 
 import (
+	"fmt"
 	"net/http"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -60,6 +62,18 @@ func (m *kantine) GetFood(t time.Time) ([]food.Food, error) {
 
 				name := s.Find("h4").Text()
 
+				// get the text of the main element, but without children
+				description := s.Contents().NotSelection(s.Children()).Text()
+
+				// remove all bracketed text from the description using regex
+				bracketed := regexp.MustCompile(`\([^)]*\)`)
+				description = bracketed.ReplaceAllString(description, "")
+
+				// trim whitespaces from the description
+				description = strings.TrimSpace(description)
+
+				name = fmt.Sprintf("%s (%s)", name, description)
+
 				if checkBlacklist(name) {
 					return
 				}
@@ -77,7 +91,7 @@ func (m *kantine) GetFood(t time.Time) ([]food.Food, error) {
 					return
 				}
 
-				vegetarian := strings.Contains(s.Text(), "(v)")
+				vegetarian := strings.Contains(s.Text(), "(v)") || strings.Contains(s.Text(), "(V)")
 				fish := strings.Contains(s.Text(), "(F)")
 
 				foodstuff[name] = food.Food{
